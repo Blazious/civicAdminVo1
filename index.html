@@ -170,10 +170,9 @@
 
   <div class="login-container">
     <div class="login-header">
-      <div style="height: 60px; display: flex; align-items: center; justify-content: center">
-        <img src="logo.png" alt="Civic Eye Logo" style="height: 120px; width: auto;">
+      <div style="height: 60px; display: flex; align-items: center; justify-content: center;">
+        <img src="logo.png" alt="Civic Eye Logo" style="height: 40px; width: auto;">
       </div>
-
       <p>Secure Administration Portal</p>
     </div>
 
@@ -201,6 +200,8 @@
   </div>
 
   <script>
+    const BASE_URL = 'https://2268c056250a.ngrok-free.app';
+
     function togglePassword() {
       const passwordInput = document.getElementById("password");
       passwordInput.type = passwordInput.type === "password" ? "text" : "password";
@@ -211,22 +212,19 @@
       const password = document.getElementById("password").value.trim();
       const errorDiv = document.getElementById("error");
 
-      // Clear previous errors
       errorDiv.textContent = "";
 
-      // Simple validation
       if (!username || !password) {
         errorDiv.textContent = "Please enter both username and password";
         return;
       }
 
-      // Show loading state
       const loginBtn = document.querySelector(".login-btn");
       loginBtn.textContent = "Authenticating...";
       loginBtn.disabled = true;
 
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/users/login/", {
+        const res = await fetch(`${BASE_URL}/api/users/login/`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -236,8 +234,8 @@
 
         if (res.ok) {
           const data = await res.json();
-          localStorage.setItem("token", data.access); // Save JWT token
-          window.location.href = "dashboard.html"; // Redirect to dashboard
+          localStorage.setItem("token", data.access);
+          window.location.href = "dashboard.html";
         } else {
           const errorData = await res.json();
           errorDiv.textContent = errorData.detail || "Login failed. Check your credentials.";
@@ -250,7 +248,6 @@
       }
     }
 
-    // Allow login on Enter key press
     document.addEventListener("keypress", function (e) {
       if (e.key === "Enter") {
         login();
